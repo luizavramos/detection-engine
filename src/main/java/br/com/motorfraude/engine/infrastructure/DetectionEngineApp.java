@@ -32,6 +32,7 @@ public final class DetectionEngineApp {
     static Properties extraProperties(EngineMetrics metrics) {
         var extra = new Properties();
         extra.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 100);
+        extra.put(StreamsConfig.PROBING_REBALANCE_INTERVAL_MS_CONFIG, 60_000L);
         extra.put(StreamsConfig.DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, DlqDeserializationHandler.class);
         extra.put(DlqDeserializationHandler.TOPIC_CONFIG, TopologyFactory.DLQ_TOPIC);
         extra.put(DlqDeserializationHandler.METRICS_CONFIG, metrics);

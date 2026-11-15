@@ -23,6 +23,7 @@ class DetectionEngineAppTest {
         assertThat(props.get(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG)).isEqualTo(100);
         assertThat(props.get(StreamsConfig.DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG)).isEqualTo(DlqDeserializationHandler.class);
         assertThat(props.get(DlqDeserializationHandler.TOPIC_CONFIG)).isEqualTo(TopologyFactory.DLQ_TOPIC);
+        assertThat(props.get(StreamsConfig.PROBING_REBALANCE_INTERVAL_MS_CONFIG)).as("instância nova recebe partições em até 1 min (mínimo aceito pelo Kafka)").isEqualTo(60_000L);
     }
 
     @Test
