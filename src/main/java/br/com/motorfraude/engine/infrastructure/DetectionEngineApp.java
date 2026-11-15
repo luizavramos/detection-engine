@@ -1,12 +1,18 @@
 package br.com.motorfraude.engine.infrastructure;
 
 import br.com.motorfraude.engine.adapters.gateway.kafka.DlqDeserializationHandler;
+import br.com.motorfraude.engine.adapters.gateway.rules.KafkaRuleSetProvider;
+import br.com.motorfraude.engine.adapters.gateway.rules.RuleSetLoader;
+import br.com.motorfraude.engine.application.gateway.RuleSetMetrics;
 import br.com.motorfraude.engine.application.gateway.RuleSetProvider;
 import br.com.motorfraude.platform.streams.StreamsAppBootstrap;
 import br.com.motorfraude.platform.streams.StreamsSettings;
 import java.time.Clock;
-import java.util.Optional;
+import java.util.Map;
 import java.util.Properties;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.streams.StreamsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +41,22 @@ public final class DetectionEngineApp {
 
     public static void main(String[] args) throws InterruptedException {
         var settings = StreamsSettings.fromEnvironment(APPLICATION_ID, System.getenv());
-        RuleSetProvider ruleSets = Optional::empty;
+        var ruleSets = new KafkaRuleSetProvider(ruleSetConsumer(settings), KafkaRuleSetProvider.TOPIC, new RuleSetLoader(RuleSetMetrics.NOOP),
+                RuleSetMetrics.NOOP);
+        ruleSets.start();
         var app = create(settings, ruleSets, Clock.systemUTC());
-        while (ruleSets.current().isEmpty()) {
-            LOG.warn("aguardando o conjunto de regras (o KafkaRuleSetProvider entra na Fase 5 da spec 004); a topologia ainda não foi iniciada");
+        while (!ruleSets.ready()) {
+            LOG.warn("aguardando o primeiro conjunto de regras em {}; a topologia ainda não foi iniciada", KafkaRuleSetProvider.TOPIC);
             Thread.sleep(5_000);
         }
         app.start();
+    }
+
+    static KafkaConsumer<String, String> ruleSetConsumer(StreamsSettings settings) {
+        return new KafkaConsumer<>(Map.<String, Object>of(
+                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, settings.bootstrapServers(),
+                ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false,
+                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
+                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class));
     }
 }
