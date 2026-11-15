@@ -6,6 +6,7 @@ import br.com.motorfraude.engine.adapters.controller.kafka.BackfillProcessor;
 import br.com.motorfraude.engine.adapters.controller.kafka.EvaluateProcessor;
 import br.com.motorfraude.engine.adapters.gateway.kafka.AccountFeaturesSerde;
 import br.com.motorfraude.engine.adapters.gateway.kafka.EngineSerdes;
+import br.com.motorfraude.engine.application.gateway.EngineMetrics;
 import br.com.motorfraude.engine.application.gateway.RuleSetProvider;
 import java.time.Clock;
 import org.apache.kafka.common.serialization.Serdes;
@@ -30,11 +31,11 @@ public final class TopologyFactory {
     private TopologyFactory() {
     }
 
-    public static Topology create(RuleSetProvider ruleSets, Clock clock) {
-        return create(ruleSets, clock, false);
+    public static Topology create(RuleSetProvider ruleSets, Clock clock, EngineMetrics metrics) {
+        return create(ruleSets, clock, metrics, false);
     }
 
-    static Topology create(RuleSetProvider ruleSets, Clock clock, boolean inMemory) {
+    static Topology create(RuleSetProvider ruleSets, Clock clock, EngineMetrics metrics, boolean inMemory) {
         var builder = new StreamsBuilder();
         var earliest = org.apache.kafka.streams.Topology.AutoOffsetReset.EARLIEST;
 
@@ -51,7 +52,7 @@ public final class TopologyFactory {
 
         var outcomes = builder
                 .stream(COMMANDS_TOPIC, Consumed.with(Serdes.String(), EngineSerdes.command()).withOffsetResetPolicy(earliest))
-                .process(() -> new EvaluateProcessor(ruleSets, clock), EvaluateProcessor.SEEN_TX_STORE, EvaluateProcessor.FEATURES_STORE,
+                .process(() -> new EvaluateProcessor(ruleSets, clock, metrics), EvaluateProcessor.SEEN_TX_STORE, EvaluateProcessor.FEATURES_STORE,
                         EvaluateProcessor.PROFILE_STORE);
 
         outcomes.mapValues(outcome -> outcome.decision().decisionMessage())

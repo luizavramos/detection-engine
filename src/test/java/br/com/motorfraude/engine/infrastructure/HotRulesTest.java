@@ -65,7 +65,7 @@ class HotRulesTest {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "detection-engine-hot-rules");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "dummy:9092");
         props.put(StreamsConfig.STATE_DIR_CONFIG, stateDir.toString());
-        driver = new TopologyTestDriver(TopologyFactory.create(provider, Clock.fixed(THREE_AM_SP, ZoneOffset.UTC), true), props, THREE_AM_SP);
+        driver = new TopologyTestDriver(TopologyFactory.create(provider, Clock.fixed(THREE_AM_SP, ZoneOffset.UTC), br.com.motorfraude.engine.application.gateway.EngineMetrics.NOOP, true), props, THREE_AM_SP);
         commands = driver.createInputTopic(TopologyFactory.COMMANDS_TOPIC, new StringSerializer(), new StringSerializer());
         decisions = driver.createOutputTopic(TopologyFactory.DECISIONS_TOPIC, new StringDeserializer(), new StringDeserializer());
     }

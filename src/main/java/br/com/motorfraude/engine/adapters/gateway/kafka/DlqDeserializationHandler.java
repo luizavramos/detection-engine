@@ -1,5 +1,6 @@
 package br.com.motorfraude.engine.adapters.gateway.kafka;
 
+import br.com.motorfraude.engine.application.gateway.EngineMetrics;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -19,6 +20,7 @@ public class DlqDeserializationHandler implements DeserializationExceptionHandle
     public static final String PRODUCER_CONFIG = "engine.dlq.producer";
     public static final String TOPIC_CONFIG = "engine.dlq.topic";
     public static final String DEFAULT_TOPIC = "transaction-commands.dlq";
+    public static final String METRICS_CONFIG = "engine.dlq.metrics";
     public static final String REASON_HEADER = "dlq.reason";
     public static final String SOURCE_TOPIC_HEADER = "dlq.source.topic";
     public static final String SOURCE_PARTITION_HEADER = "dlq.source.partition";
@@ -28,10 +30,14 @@ public class DlqDeserializationHandler implements DeserializationExceptionHandle
 
     private Producer<byte[], byte[]> producer;
     private String topic = DEFAULT_TOPIC;
+    private EngineMetrics metrics = EngineMetrics.NOOP;
 
     @Override
     @SuppressWarnings("unchecked")
     public void configure(Map<String, ?> configs) {
+        if (configs.get(METRICS_CONFIG) instanceof EngineMetrics configured) {
+            metrics = configured;
+        }
         if (configs.get(TOPIC_CONFIG) != null) {
             topic = String.valueOf(configs.get(TOPIC_CONFIG));
         }
@@ -59,6 +65,7 @@ public class DlqDeserializationHandler implements DeserializationExceptionHandle
         dead.headers().add(SOURCE_OFFSET_HEADER, bytes(String.valueOf(record.offset())));
         try {
             producer.send(dead).get();
+            metrics.dlq();
             LOG.warn("mensagem de {} [{}@{}] enviada para {}: {}", record.topic(), record.partition(), record.offset(), topic,
                     exception.getMessage());
             return DeserializationHandlerResponse.CONTINUE;

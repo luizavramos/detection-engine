@@ -12,6 +12,7 @@ import br.com.motorfraude.engine.adapters.gateway.kafka.StateStoreDedupStore;
 import br.com.motorfraude.engine.adapters.gateway.kafka.StateStoreFeatureStore;
 import br.com.motorfraude.engine.application.EvaluateTransactionUseCase;
 import br.com.motorfraude.engine.application.Outcome;
+import br.com.motorfraude.engine.application.gateway.EngineMetrics;
 import br.com.motorfraude.engine.application.gateway.RuleSetProvider;
 import br.com.motorfraude.engine.domain.features.AccountFeatures;
 import java.nio.charset.StandardCharsets;
@@ -37,10 +38,12 @@ public final class EvaluateProcessor implements Processor<String, EvaluateTransa
 
     private final RuleSetProvider ruleSets;
     private final Clock clock;
+    private final EngineMetrics metrics;
     private ProcessorContext<String, Outcome> context;
     private EvaluateTransactionUseCase useCase;
 
-    public EvaluateProcessor(RuleSetProvider ruleSets, Clock clock) {
+    public EvaluateProcessor(RuleSetProvider ruleSets, Clock clock, EngineMetrics metrics) {
+        this.metrics = metrics;
         this.ruleSets = ruleSets;
         this.clock = clock;
     }
@@ -62,9 +65,15 @@ public final class EvaluateProcessor implements Processor<String, EvaluateTransa
     public void process(Record<String, EvaluateTransaction> record) {
         var receivedAt = receivedAt(record.headers(), record.timestamp());
         var outcome = useCase.execute(record.value(), receivedAt, traceId(record.headers()));
-        if (!outcome.duplicate()) {
-            context.forward(record.withValue(outcome));
+        if (outcome.duplicate()) {
+            metrics.duplicateDropped();
+            return;
         }
+        if (outcome.late()) {
+            metrics.lateEvent();
+        }
+        metrics.decided(outcome.decision(), Duration.between(receivedAt, clock.instant()));
+        context.forward(record.withValue(outcome));
     }
 
     private static Instant receivedAt(Headers headers, long recordTimestamp) {

@@ -58,6 +58,7 @@ class TopologyFactoryTest {
 
     private final MockProducer<byte[], byte[]> dlqProducer = new MockProducer<>(true, null, new ByteArraySerializer(), new ByteArraySerializer());
     private final FixedRuleSetProvider ruleSets = new FixedRuleSetProvider(InitialRules.compiled(7));
+    private final br.com.motorfraude.engine.fakes.RecordingEngineMetrics metrics = new br.com.motorfraude.engine.fakes.RecordingEngineMetrics();
     private TopologyTestDriver driver;
     private TestInputTopic<String, String> commands;
     private TestInputTopic<String, String> backfill;
@@ -74,7 +75,8 @@ class TopologyFactoryTest {
         props.put(StreamsConfig.STATE_DIR_CONFIG, stateDir.toString());
         props.put(StreamsConfig.DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, DlqDeserializationHandler.class);
         props.put(DlqDeserializationHandler.PRODUCER_CONFIG, dlqProducer);
-        driver = new TopologyTestDriver(TopologyFactory.create(ruleSets, Clock.fixed(DECIDED, ZoneOffset.UTC), true), props, DECIDED);
+        props.put(DlqDeserializationHandler.METRICS_CONFIG, metrics);
+        driver = new TopologyTestDriver(TopologyFactory.create(ruleSets, Clock.fixed(DECIDED, ZoneOffset.UTC), metrics, true), props, DECIDED);
         commands = driver.createInputTopic(TopologyFactory.COMMANDS_TOPIC, new StringSerializer(), new StringSerializer());
         backfill = driver.createInputTopic(TopologyFactory.BACKFILL_TOPIC, new StringSerializer(), new StringSerializer());
         profiles = driver.createInputTopic(TopologyFactory.PROFILES_TOPIC, new StringSerializer(), new StringSerializer());
@@ -305,5 +307,48 @@ class TopologyFactoryTest {
         driver.advanceWallClockTime(Duration.ofHours(2));
         sendCommand(benign("tx-0016-abcdef"));
         assertThat(drainDecisions()).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("métricas: cada decisão chega às métricas com a latência desde o receivedAt")
+    void metricasDeDecisao() {
+        sendProfile(NOW.minus(Duration.ofDays(400)), null);
+
+        sendCommand(benign("tx-0017-abcdef"));
+        sendCommand(benign("tx-0018-abcdef"));
+
+        assertThat(metrics.decisions).hasSize(2);
+        assertThat(metrics.latencies).containsOnly(Duration.between(RECEIVED, DECIDED));
+    }
+
+    @Test
+    @DisplayName("métricas: duplicata descartada é contada e não vira decisão")
+    void metricasDeDuplicata() {
+        sendProfile(NOW.minus(Duration.ofDays(400)), null);
+
+        sendCommand(benign("tx-0019-abcdef"));
+        sendCommand(benign("tx-0019-abcdef"));
+
+        assertThat(metrics.duplicates).isEqualTo(1);
+        assertThat(metrics.decisions).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("métricas: evento mais de 2 min atrasado é contado como tardio")
+    void metricasDeAtraso() {
+        sendProfile(NOW.minus(Duration.ofDays(400)), null);
+
+        sendCommand(tx("tx-0020-abcdef", RECEIVED.minus(Duration.ofMinutes(10)), 5_000, "acc_tok_dest0001", "dev_aaaaaaaa"));
+        sendCommand(tx("tx-0021-abcdef", RECEIVED.minusSeconds(30), 5_000, "acc_tok_dest0001", "dev_aaaaaaaa"));
+
+        assertThat(metrics.late).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("métricas: mensagem enviada para a DLQ é contada")
+    void metricasDeDlq() {
+        commands.pipeInput(ACCOUNT, "{não é json");
+
+        assertThat(metrics.dlq).isEqualTo(1);
     }
 }

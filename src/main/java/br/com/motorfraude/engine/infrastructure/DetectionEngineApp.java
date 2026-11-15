@@ -1,12 +1,15 @@
 package br.com.motorfraude.engine.infrastructure;
 
 import br.com.motorfraude.engine.adapters.gateway.kafka.DlqDeserializationHandler;
+import br.com.motorfraude.engine.adapters.gateway.micrometer.MicrometerEngineMetrics;
 import br.com.motorfraude.engine.adapters.gateway.rules.KafkaRuleSetProvider;
 import br.com.motorfraude.engine.adapters.gateway.rules.RuleSetLoader;
-import br.com.motorfraude.engine.application.gateway.RuleSetMetrics;
+import br.com.motorfraude.engine.application.gateway.EngineMetrics;
 import br.com.motorfraude.engine.application.gateway.RuleSetProvider;
 import br.com.motorfraude.platform.streams.StreamsAppBootstrap;
 import br.com.motorfraude.platform.streams.StreamsSettings;
+import io.micrometer.prometheusmetrics.PrometheusConfig;
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
 import java.time.Clock;
 import java.util.Map;
 import java.util.Properties;
@@ -26,25 +29,30 @@ public final class DetectionEngineApp {
     private DetectionEngineApp() {
     }
 
-    static Properties extraProperties() {
+    static Properties extraProperties(EngineMetrics metrics) {
         var extra = new Properties();
         extra.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 100);
         extra.put(StreamsConfig.DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, DlqDeserializationHandler.class);
         extra.put(DlqDeserializationHandler.TOPIC_CONFIG, TopologyFactory.DLQ_TOPIC);
+        extra.put(DlqDeserializationHandler.METRICS_CONFIG, metrics);
         return extra;
     }
 
-    public static StreamsAppBootstrap create(StreamsSettings settings, RuleSetProvider ruleSets, Clock clock) {
-        return StreamsAppBootstrap.create(settings, extraProperties(), registry -> TopologyFactory.create(ruleSets, clock))
+    public static StreamsAppBootstrap create(StreamsSettings settings, RuleSetProvider ruleSets, Clock clock, PrometheusMeterRegistry registry,
+            EngineMetrics metrics) {
+        return StreamsAppBootstrap.create(settings, extraProperties(metrics), registry,
+                meters -> TopologyFactory.create(ruleSets, clock, metrics))
                 .readinessCheck(() -> ruleSets.current().isPresent());
     }
 
     public static void main(String[] args) throws InterruptedException {
         var settings = StreamsSettings.fromEnvironment(APPLICATION_ID, System.getenv());
-        var ruleSets = new KafkaRuleSetProvider(ruleSetConsumer(settings), KafkaRuleSetProvider.TOPIC, new RuleSetLoader(RuleSetMetrics.NOOP),
-                RuleSetMetrics.NOOP);
+        var clock = Clock.systemUTC();
+        var registry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
+        var metrics = new MicrometerEngineMetrics(registry, clock);
+        var ruleSets = new KafkaRuleSetProvider(ruleSetConsumer(settings), KafkaRuleSetProvider.TOPIC, new RuleSetLoader(metrics), metrics);
         ruleSets.start();
-        var app = create(settings, ruleSets, Clock.systemUTC());
+        var app = create(settings, ruleSets, clock, registry, metrics);
         while (!ruleSets.ready()) {
             LOG.warn("aguardando o primeiro conjunto de regras em {}; a topologia ainda não foi iniciada", KafkaRuleSetProvider.TOPIC);
             Thread.sleep(5_000);

@@ -18,7 +18,7 @@ class DetectionEngineAppTest {
     @Test
     @DisplayName("o motor usa commit de 100 ms e o handler de DLQ da topologia")
     void propriedades() {
-        var props = DetectionEngineApp.extraProperties();
+        var props = DetectionEngineApp.extraProperties(br.com.motorfraude.engine.application.gateway.EngineMetrics.NOOP);
 
         assertThat(props.get(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG)).isEqualTo(100);
         assertThat(props.get(StreamsConfig.DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG)).isEqualTo(DlqDeserializationHandler.class);
@@ -31,7 +31,8 @@ class DetectionEngineAppTest {
         var ruleSets = new FixedRuleSetProvider(null);
         var settings = new StreamsSettings("detection-engine-app-test", "localhost:9092", tmp, 1, 0, "detection-engine-app-test-0", 0);
 
-        try (var app = DetectionEngineApp.create(settings, ruleSets, Clock.systemUTC())) {
+        var registry = new io.micrometer.prometheusmetrics.PrometheusMeterRegistry(io.micrometer.prometheusmetrics.PrometheusConfig.DEFAULT);
+        try (var app = DetectionEngineApp.create(settings, ruleSets, Clock.systemUTC(), registry, new br.com.motorfraude.engine.adapters.gateway.micrometer.MicrometerEngineMetrics(registry, Clock.systemUTC()))) {
             assertThat(app.ready()).isFalse();
             ruleSets.set(InitialRules.compiled(1));
             assertThat(app.ready()).isFalse();
