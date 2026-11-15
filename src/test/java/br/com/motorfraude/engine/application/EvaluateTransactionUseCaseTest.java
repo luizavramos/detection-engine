@@ -69,6 +69,7 @@ class EvaluateTransactionUseCaseTest {
         var outcome = run(tx("tx-0001-abcdef", THREE_AM_SP.plus(Duration.ofHours(10)), 5_000, "acc_tok_dest0001", "dev_aaaaaaaa"));
 
         assertThat(outcome.duplicate()).isFalse();
+        assertThat(outcome.late()).isFalse();
         var decision = outcome.decision();
         assertThat(decision.severity()).isEqualTo(Severity.NONE);
         assertThat(decision.alertMessage()).isEmpty();
@@ -196,5 +197,32 @@ class EvaluateTransactionUseCaseTest {
 
         assertThatThrownBy(() -> run(transaction)).isInstanceOf(IllegalStateException.class).hasMessageContaining("conjunto de regras");
         assertThat(dedup.seen("tx-0012-abcdef")).isFalse();
+    }
+
+    @Test
+    @DisplayName("evento com até 2 min de atraso entra no bucket do seu occurredAt e não é marcado como atrasado")
+    void atrasoTolerado() {
+        profiles.put(profile(Segment.PF, THREE_AM_SP.minus(Duration.ofDays(400)), null));
+        var occurredAt = RECEIVED.minusSeconds(90);
+
+        var outcome = run(tx("tx-0013-abcdef", occurredAt, 5_000, "acc_tok_dest0001", "dev_aaaaaaaa"));
+
+        assertThat(outcome.late()).isFalse();
+        assertThat(featureStore.load(ACCOUNT).count(occurredAt, br.com.motorfraude.engine.domain.features.Window.M1)).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("evento com mais de 2 min de atraso entra no bucket do horário de chegada e é marcado como atrasado")
+    void atrasoDemais() {
+        profiles.put(profile(Segment.PF, THREE_AM_SP.minus(Duration.ofDays(400)), null));
+        var occurredAt = RECEIVED.minus(Duration.ofMinutes(10));
+
+        var outcome = run(tx("tx-0014-abcdef", occurredAt, 5_000, "acc_tok_dest0001", "dev_aaaaaaaa"));
+
+        assertThat(outcome.late()).isTrue();
+        var features = featureStore.load(ACCOUNT);
+        assertThat(features.count(RECEIVED, br.com.motorfraude.engine.domain.features.Window.M1)).isEqualTo(1);
+        assertThat(features.count(occurredAt, br.com.motorfraude.engine.domain.features.Window.M1)).isZero();
+        assertThat(outcome.decision().decisionMessage().features()).containsEntry("features.count1m", 1L);
     }
 }
