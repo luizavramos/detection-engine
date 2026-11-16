@@ -1,0 +1,506 @@
+{
+  "accounts" : {
+    "acc_tok_00000001" : {
+      "avgAmount30d" : 129100,
+      "count30d" : 4,
+      "maxAmount90d" : 460500
+    },
+    "acc_tok_00000002" : {
+      "avgAmount30d" : 178385,
+      "count30d" : 3,
+      "maxAmount90d" : 468419
+    },
+    "acc_tok_00000003" : {
+      "avgAmount30d" : 186304,
+      "count30d" : 3,
+      "maxAmount90d" : 476338
+    },
+    "acc_tok_00000004" : {
+      "avgAmount30d" : 173507,
+      "count30d" : 4,
+      "maxAmount90d" : 484257
+    },
+    "acc_tok_00000005" : {
+      "avgAmount30d" : 181426,
+      "count30d" : 4,
+      "maxAmount90d" : 492176
+    },
+    "acc_tok_00000006" : {
+      "avgAmount30d" : 168628,
+      "count30d" : 3,
+      "maxAmount90d" : 500095
+    },
+    "acc_tok_00000007" : {
+      "avgAmount30d" : 176547,
+      "count30d" : 3,
+      "maxAmount90d" : 467514
+    },
+    "acc_tok_00000008" : {
+      "avgAmount30d" : 184466,
+      "count30d" : 3,
+      "maxAmount90d" : 475433
+    },
+    "acc_tok_00000009" : {
+      "avgAmount30d" : 192385,
+      "count30d" : 3,
+      "maxAmount90d" : 483352
+    },
+    "acc_tok_00000010" : {
+      "avgAmount30d" : 168296,
+      "count30d" : 4,
+      "maxAmount90d" : 491271
+    },
+    "acc_tok_00000011" : {
+      "avgAmount30d" : 232710,
+      "count30d" : 5,
+      "maxAmount90d" : 499190
+    },
+    "acc_tok_00000012" : {
+      "avgAmount30d" : 240629,
+      "count30d" : 5,
+      "maxAmount90d" : 466609
+    },
+    "acc_tok_00000013" : {
+      "avgAmount30d" : 285978,
+      "count30d" : 4,
+      "maxAmount90d" : 474528
+    },
+    "acc_tok_00000014" : {
+      "avgAmount30d" : 293897,
+      "count30d" : 4,
+      "maxAmount90d" : 482447
+    },
+    "acc_tok_00000015" : {
+      "avgAmount30d" : 301816,
+      "count30d" : 4,
+      "maxAmount90d" : 490366
+    },
+    "acc_tok_00000016" : {
+      "avgAmount30d" : 309735,
+      "count30d" : 4,
+      "maxAmount90d" : 498285
+    },
+    "acc_tok_00000017" : {
+      "avgAmount30d" : 238044,
+      "count30d" : 5,
+      "maxAmount90d" : 462904
+    },
+    "acc_tok_00000018" : {
+      "avgAmount30d" : 255973,
+      "count30d" : 6,
+      "maxAmount90d" : 470823
+    },
+    "acc_tok_00000019" : {
+      "avgAmount30d" : 263892,
+      "count30d" : 6,
+      "maxAmount90d" : 478742
+    },
+    "acc_tok_00000020" : {
+      "avgAmount30d" : 271811,
+      "count30d" : 6,
+      "maxAmount90d" : 486661
+    },
+    "acc_tok_00000021" : {
+      "avgAmount30d" : 244860,
+      "count30d" : 5,
+      "maxAmount90d" : 494580
+    },
+    "acc_tok_00000022" : {
+      "avgAmount30d" : 252779,
+      "count30d" : 5,
+      "maxAmount90d" : 461999
+    },
+    "acc_tok_00000023" : {
+      "avgAmount30d" : 260698,
+      "count30d" : 5,
+      "maxAmount90d" : 469918
+    },
+    "acc_tok_00000024" : {
+      "avgAmount30d" : 268337,
+      "count30d" : 6,
+      "maxAmount90d" : 477837
+    },
+    "acc_tok_00000025" : {
+      "avgAmount30d" : 276256,
+      "count30d" : 6,
+      "maxAmount90d" : 485756
+    },
+    "acc_tok_00000026" : {
+      "avgAmount30d" : 266617,
+      "count30d" : 7,
+      "maxAmount90d" : 493675
+    },
+    "acc_tok_00000027" : {
+      "avgAmount30d" : 274536,
+      "count30d" : 7,
+      "maxAmount90d" : 498794
+    },
+    "acc_tok_00000028" : {
+      "avgAmount30d" : 195963,
+      "count30d" : 6,
+      "maxAmount90d" : 425713
+    },
+    "acc_tok_00000029" : {
+      "avgAmount30d" : 203882,
+      "count30d" : 6,
+      "maxAmount90d" : 433632
+    },
+    "acc_tok_00000030" : {
+      "avgAmount30d" : 211801,
+      "count30d" : 6,
+      "maxAmount90d" : 441551
+    },
+    "acc_tok_00000031" : {
+      "avgAmount30d" : 204655,
+      "count30d" : 7,
+      "maxAmount90d" : 449470
+    },
+    "acc_tok_00000032" : {
+      "avgAmount30d" : 212574,
+      "count30d" : 7,
+      "maxAmount90d" : 457389
+    },
+    "acc_tok_00000033" : {
+      "avgAmount30d" : 194008,
+      "count30d" : 8,
+      "maxAmount90d" : 465308
+    },
+    "acc_tok_00000034" : {
+      "avgAmount30d" : 193298,
+      "count30d" : 7,
+      "maxAmount90d" : 473227
+    },
+    "acc_tok_00000035" : {
+      "avgAmount30d" : 209962,
+      "count30d" : 6,
+      "maxAmount90d" : 481146
+    },
+    "acc_tok_00000036" : {
+      "avgAmount30d" : 217881,
+      "count30d" : 6,
+      "maxAmount90d" : 489065
+    },
+    "acc_tok_00000037" : {
+      "avgAmount30d" : 225800,
+      "count30d" : 6,
+      "maxAmount90d" : 496984
+    },
+    "acc_tok_00000038" : {
+      "avgAmount30d" : 233719,
+      "count30d" : 6,
+      "maxAmount90d" : 464403
+    },
+    "acc_tok_00000039" : {
+      "avgAmount30d" : 274193,
+      "count30d" : 7,
+      "maxAmount90d" : 472322
+    },
+    "acc_tok_00000040" : {
+      "avgAmount30d" : 291341,
+      "count30d" : 8,
+      "maxAmount90d" : 480241
+    },
+    "acc_tok_00000041" : {
+      "avgAmount30d" : 326345,
+      "count30d" : 7,
+      "maxAmount90d" : 488160
+    },
+    "acc_tok_00000042" : {
+      "avgAmount30d" : 307295,
+      "count30d" : 6,
+      "maxAmount90d" : 496079
+    },
+    "acc_tok_00000043" : {
+      "avgAmount30d" : 231881,
+      "count30d" : 6,
+      "maxAmount90d" : 420198
+    },
+    "acc_tok_00000044" : {
+      "avgAmount30d" : 239800,
+      "count30d" : 6,
+      "maxAmount90d" : 428117
+    },
+    "acc_tok_00000045" : {
+      "avgAmount30d" : 247719,
+      "count30d" : 6,
+      "maxAmount90d" : 436036
+    },
+    "acc_tok_00000046" : {
+      "avgAmount30d" : 264383,
+      "count30d" : 7,
+      "maxAmount90d" : 443955
+    },
+    "acc_tok_00000047" : {
+      "avgAmount30d" : 272302,
+      "count30d" : 7,
+      "maxAmount90d" : 451874
+    },
+    "acc_tok_00000048" : {
+      "avgAmount30d" : 250759,
+      "count30d" : 6,
+      "maxAmount90d" : 459793
+    },
+    "acc_tok_00000049" : {
+      "avgAmount30d" : 258678,
+      "count30d" : 6,
+      "maxAmount90d" : 467712
+    },
+    "acc_tok_00000050" : {
+      "avgAmount30d" : 249651,
+      "count30d" : 5,
+      "maxAmount90d" : 475631
+    },
+    "acc_tok_00000051" : {
+      "avgAmount30d" : 257570,
+      "count30d" : 5,
+      "maxAmount90d" : 483550
+    },
+    "acc_tok_00000052" : {
+      "avgAmount30d" : 265489,
+      "count30d" : 5,
+      "maxAmount90d" : 491469
+    },
+    "acc_tok_00000053" : {
+      "avgAmount30d" : 255204,
+      "count30d" : 6,
+      "maxAmount90d" : 499388
+    },
+    "acc_tok_00000054" : {
+      "avgAmount30d" : 263123,
+      "count30d" : 6,
+      "maxAmount90d" : 466807
+    },
+    "acc_tok_00000055" : {
+      "avgAmount30d" : 264386,
+      "count30d" : 5,
+      "maxAmount90d" : 474726
+    },
+    "acc_tok_00000056" : {
+      "avgAmount30d" : 272305,
+      "count30d" : 5,
+      "maxAmount90d" : 482645
+    },
+    "acc_tok_00000057" : {
+      "avgAmount30d" : 300614,
+      "count30d" : 4,
+      "maxAmount90d" : 490564
+    },
+    "acc_tok_00000058" : {
+      "avgAmount30d" : 308533,
+      "count30d" : 4,
+      "maxAmount90d" : 498483
+    },
+    "acc_tok_00000059" : {
+      "avgAmount30d" : 191452,
+      "count30d" : 4,
+      "maxAmount90d" : 463102
+    },
+    "acc_tok_00000060" : {
+      "avgAmount30d" : 161801,
+      "count30d" : 5,
+      "maxAmount90d" : 471021
+    },
+    "acc_tok_00000061" : {
+      "avgAmount30d" : 169720,
+      "count30d" : 5,
+      "maxAmount90d" : 478940
+    },
+    "acc_tok_00000062" : {
+      "avgAmount30d" : 177639,
+      "count30d" : 5,
+      "maxAmount90d" : 486859
+    },
+    "acc_tok_00000063" : {
+      "avgAmount30d" : 192053,
+      "count30d" : 4,
+      "maxAmount90d" : 491978
+    },
+    "acc_tok_00000064" : {
+      "avgAmount30d" : 251297,
+      "count30d" : 3,
+      "maxAmount90d" : 499897
+    },
+    "acc_tok_00000065" : {
+      "avgAmount30d" : 259216,
+      "count30d" : 3,
+      "maxAmount90d" : 470116
+    },
+    "acc_tok_00000066" : {
+      "avgAmount30d" : 267135,
+      "count30d" : 3,
+      "maxAmount90d" : 478035
+    },
+    "acc_tok_00000067" : {
+      "avgAmount30d" : 275054,
+      "count30d" : 3,
+      "maxAmount90d" : 485954
+    },
+    "acc_tok_00000068" : {
+      "avgAmount30d" : 303923,
+      "count30d" : 4,
+      "maxAmount90d" : 493873
+    },
+    "acc_tok_00000069" : {
+      "avgAmount30d" : 311842,
+      "count30d" : 4,
+      "maxAmount90d" : 498992
+    },
+    "acc_tok_00000070" : {
+      "avgAmount30d" : 257377,
+      "count30d" : 3,
+      "maxAmount90d" : 425911
+    },
+    "acc_tok_00000071" : {
+      "avgAmount30d" : 265296,
+      "count30d" : 3,
+      "maxAmount90d" : 433830
+    },
+    "acc_tok_00000072" : {
+      "avgAmount30d" : 273215,
+      "count30d" : 3,
+      "maxAmount90d" : 441749
+    },
+    "acc_tok_00000073" : {
+      "avgAmount30d" : 281134,
+      "count30d" : 3,
+      "maxAmount90d" : 449668
+    },
+    "acc_tok_00000074" : {
+      "avgAmount30d" : 289053,
+      "count30d" : 3,
+      "maxAmount90d" : 457587
+    },
+    "acc_tok_00000075" : {
+      "avgAmount30d" : 276256,
+      "count30d" : 4,
+      "maxAmount90d" : 465506
+    },
+    "acc_tok_00000076" : {
+      "avgAmount30d" : 284175,
+      "count30d" : 4,
+      "maxAmount90d" : 473425
+    },
+    "acc_tok_00000077" : {
+      "avgAmount30d" : 271377,
+      "count30d" : 3,
+      "maxAmount90d" : 481344
+    },
+    "acc_tok_00000078" : {
+      "avgAmount30d" : 279296,
+      "count30d" : 3,
+      "maxAmount90d" : 489263
+    },
+    "acc_tok_00000079" : {
+      "avgAmount30d" : 287215,
+      "count30d" : 3,
+      "maxAmount90d" : 497182
+    },
+    "acc_tok_00000080" : {
+      "avgAmount30d" : 295134,
+      "count30d" : 3,
+      "maxAmount90d" : 461801
+    },
+    "acc_tok_00000081" : {
+      "avgAmount30d" : 303053,
+      "count30d" : 3,
+      "maxAmount90d" : 469720
+    },
+    "acc_tok_00000082" : {
+      "avgAmount30d" : 248589,
+      "count30d" : 4,
+      "maxAmount90d" : 477639
+    },
+    "acc_tok_00000083" : {
+      "avgAmount30d" : 256508,
+      "count30d" : 4,
+      "maxAmount90d" : 485558
+    },
+    "acc_tok_00000084" : {
+      "avgAmount30d" : 285377,
+      "count30d" : 3,
+      "maxAmount90d" : 493477
+    },
+    "acc_tok_00000085" : {
+      "avgAmount30d" : 126629,
+      "count30d" : 3,
+      "maxAmount90d" : 458096
+    },
+    "acc_tok_00000086" : {
+      "avgAmount30d" : 134548,
+      "count30d" : 3,
+      "maxAmount90d" : 466015
+    },
+    "acc_tok_00000087" : {
+      "avgAmount30d" : 142467,
+      "count30d" : 3,
+      "maxAmount90d" : 473934
+    },
+    "acc_tok_00000088" : {
+      "avgAmount30d" : 150386,
+      "count30d" : 3,
+      "maxAmount90d" : 481853
+    },
+    "acc_tok_00000089" : {
+      "avgAmount30d" : 220922,
+      "count30d" : 4,
+      "maxAmount90d" : 489772
+    },
+    "acc_tok_00000090" : {
+      "avgAmount30d" : 228841,
+      "count30d" : 4,
+      "maxAmount90d" : 459991
+    },
+    "acc_tok_00000091" : {
+      "avgAmount30d" : 236760,
+      "count30d" : 4,
+      "maxAmount90d" : 467910
+    },
+    "acc_tok_00000092" : {
+      "avgAmount30d" : 307295,
+      "count30d" : 3,
+      "maxAmount90d" : 475829
+    },
+    "acc_tok_00000093" : {
+      "avgAmount30d" : 315214,
+      "count30d" : 3,
+      "maxAmount90d" : 483748
+    },
+    "acc_tok_00000094" : {
+      "avgAmount30d" : 323133,
+      "count30d" : 3,
+      "maxAmount90d" : 491667
+    },
+    "acc_tok_00000095" : {
+      "avgAmount30d" : 331052,
+      "count30d" : 3,
+      "maxAmount90d" : 499586
+    },
+    "acc_tok_00000096" : {
+      "avgAmount30d" : 338971,
+      "count30d" : 3,
+      "maxAmount90d" : 464205
+    },
+    "acc_tok_00000097" : {
+      "avgAmount30d" : 326174,
+      "count30d" : 4,
+      "maxAmount90d" : 472124
+    },
+    "acc_tok_00000098" : {
+      "avgAmount30d" : 334093,
+      "count30d" : 4,
+      "maxAmount90d" : 480043
+    },
+    "acc_tok_00000099" : {
+      "avgAmount30d" : 321295,
+      "count30d" : 3,
+      "maxAmount90d" : 487962
+    },
+    "acc_tok_00000100" : {
+      "avgAmount30d" : 329214,
+      "count30d" : 3,
+      "maxAmount90d" : 495881
+    }
+  },
+  "cutoverAt" : "2026-11-15T00:00:00Z",
+  "evaluatedAt" : "2026-11-15T00:00:00Z"
+}
