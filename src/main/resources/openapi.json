@@ -1,0 +1,11 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "detection-engine", "version": "0.1.0", "description": "Sem API de negócio: consome transaction-commands.v1 e publica decisões e alertas (Kafka). Aqui ficam só os endpoints de operação." },
+  "paths": {
+    "/actuator/health": { "get": { "summary": "Saúde geral", "tags": ["Operação"], "responses": { "200": { "description": "UP", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Health" } } } }, "503": { "description": "DOWN ou OUT_OF_SERVICE" } } } },
+    "/actuator/health/liveness": { "get": { "summary": "O processo está vivo", "tags": ["Operação"], "responses": { "200": { "description": "UP" }, "503": { "description": "DOWN" } } } },
+    "/actuator/health/readiness": { "get": { "summary": "Pronto para trabalhar (estado carregado, stream em execução)", "tags": ["Operação"], "responses": { "200": { "description": "UP" }, "503": { "description": "OUT_OF_SERVICE" } } } },
+    "/actuator/prometheus": { "get": { "summary": "Métricas no formato Prometheus", "tags": ["Operação"], "responses": { "200": { "description": "Texto no formato de exposição do Prometheus", "content": { "text/plain": { "schema": { "type": "string" } } } } } } }
+  },
+  "components": { "schemas": { "Health": { "type": "object", "properties": { "status": { "type": "string", "enum": ["UP", "DOWN", "OUT_OF_SERVICE"] } } } } }
+}
