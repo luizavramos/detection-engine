@@ -42,19 +42,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/**
- * Spec 006, SC-001: depois do backfill, a {@code avgAmount30d} de 100 contas de referência no motor bate com o cálculo
- * direto em SQL no banco legado, diferença 0.
- *
- * <p>O motor não expõe features fora das regras, então a prova roda em processo: a topologia real recebe, no tópico
- * de backfill, os registros que o {@code transaction-service} publicou (fixture {@code reference-history.jsonl},
- * gerada pelo {@code TransactionServiceIT} contra Postgres, Kafka e Debezium reais) e avalia a primeira transação ao
- * vivo de cada conta, em {@code cutoverAt}; a feature sai na própria decisão.
- *
- * <p>A referência em SQL ({@code reference-expected.json}) usa a mesma janela que o motor: {@code avgAmount30d} é a
- * soma dos buckets dos 30 dias UTC até o dia do corte dividida pela contagem (divisão inteira), calculada antes da
- * transação avaliada; {@code maxAmount90d}, o maior valor dos 90 dias UTC.
- */
 class BackfillReferenceAccuracyTest {
 
     private static final String RESOURCE_DIR = "/backfill-reference/";
@@ -101,7 +88,6 @@ class BackfillReferenceAccuracyTest {
             var commands = driver.createInputTopic(TopologyFactory.COMMANDS_TOPIC, new StringSerializer(), new StringSerializer());
             var decisions = driver.createOutputTopic(TopologyFactory.DECISIONS_TOPIC, new StringDeserializer(), new StringDeserializer());
 
-            // 1. o backfill, exatamente como o transaction-service o publicou (a chave é o accountId)
             for (var line : records) {
                 ContractAssertions.assertProduces("transaction-history-record.v1", line);
                 var record = JsonCodec.fromJson(line, TransactionHistoryRecord.class);
@@ -109,7 +95,6 @@ class BackfillReferenceAccuracyTest {
             }
             assertThat(decisions.isEmpty()).as("o backfill não decide nada").isTrue();
 
-            // 2. a primeira transação ao vivo de cada conta, em cutoverAt
             int n = 0;
             for (var account : accounts) {
                 var profile = new CustomerProfile(account, Segment.PF, cutover.minus(Duration.ofDays(400)), null, List.of(), cutover);
@@ -130,7 +115,6 @@ class BackfillReferenceAccuracyTest {
             }
             assertThat(features).as("uma decisão por conta").hasSize(100);
 
-            // 3. diferença 0, conta a conta, contra o SQL
             long withHistory = 0;
             for (var account : accounts) {
                 var sql = expected.path("accounts").path(account);
@@ -139,7 +123,6 @@ class BackfillReferenceAccuracyTest {
                         .as("avgAmount30d de %s", account).isEqualTo(sql.path("avgAmount30d").asLong());
                 assertThat(((Number) engine.get("features.maxAmount90d")).longValue())
                         .as("maxAmount90d de %s", account).isEqualTo(sql.path("maxAmount90d").asLong());
-                // count30d já inclui a própria transação avaliada
                 assertThat(((Number) engine.get("features.count30d")).longValue())
                         .as("count30d de %s", account).isEqualTo(sql.path("count30d").asLong() + 1);
                 if (sql.path("count30d").asLong() > 0) {
