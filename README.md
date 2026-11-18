@@ -9,4 +9,26 @@ Motor de detecção de fraude em tempo real. Aplicação Kafka Streams (Processo
 - **Backfill:** `transaction-history-backfill.v1` popula os buckets sem decidir nada.
 - **Métricas:** latência fim a fim (`engine_e2e_latency_seconds`, a partir do `receivedAt`), decisões por severidade, acertos por regra, duplicatas, atrasados, DLQ, versão e idade do conjunto de regras.
 
-Build: `./mvnw verify` (unitários, ArchUnit e um teste com Kafka real). O script do teste de aceite (H5) está em `infra/h5-acceptance.sh`, no repositório `fraud-detection-engine`.
+## Configuração
+
+Lida do ambiente (`StreamsSettings`, do `platform-streams`):
+
+| Variável | Para quê |
+|---|---|
+| `KAFKA_BOOTSTRAP_SERVERS` | brokers |
+| `HOSTNAME` | identifica a instância (static membership); no compose cada réplica tem o seu |
+| `HTTP_PORT` | saúde e métricas (8084 no compose) |
+| `STATE_DIR` | diretório do estado local (RocksDB); precisa sobreviver a reinício para a instância voltar rápido |
+| `REPLICATION_FACTOR` | fator de replicação dos tópicos internos do Streams |
+| `STANDBY_REPLICAS` | réplicas de reserva do estado, para a troca de instância ser rápida |
+
+## Como rodar
+
+Precisa de Java 21, Docker (um dos testes sobe Kafka real) e dos artefatos `motor-fraude-parent`, `contracts`, `platform-commons`, `platform-streams` e `rules-kernel` instalados (`./mvnw install` em cada um, nessa ordem).
+
+```bash
+./mvnw verify                  # unitários, ArchUnit e um teste com Kafka real
+./mvnw -DskipTests package     # gera target/detection-engine-0.1.0.jar
+```
+
+O motor só fica pronto (`/actuator/health/readiness`) depois de ler o conjunto de regras de `rule-sets.v1`; sem nenhum conjunto publicado ele continua não pronto. Para subi-lo com Kafka, Debezium, Postgres e observabilidade, use o `docker-compose.yml` do repositório https://github.com/luizavramos/fraud-detection-engine (perfil `app`). Lá também estão os roteiros que provam o comportamento no compose: `infra/hot-rules-acceptance.sh` (regra nova valendo em segundos, sem reiniciar) e `infra/chaos-engine.sh` (derrubar uma instância).
