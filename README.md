@@ -9,4 +9,4 @@ Motor de detecção de fraude em tempo real. Aplicação Kafka Streams (Processo
 - **Backfill:** `transaction-history-backfill.v1` popula os buckets sem decidir nada.
 - **Métricas:** latência fim a fim (`engine_e2e_latency_seconds`, a partir do `receivedAt`), decisões por severidade, acertos por regra, duplicatas, atrasados, DLQ, versão e idade do conjunto de regras.
 
-Build: `./mvnw verify` (unitários, ArchUnit e um teste com Kafka real). Resultados e provas (aceite H5, carga local, caos): `docs/resultados-carga.md`, `docs/resultados-caos.md` e `infra/h5-acceptance.sh` no repositório `motor-fraude`. Plano e tarefas: `specs/004-detection-engine/`.
+Build: `./mvnw verify` (unitários, ArchUnit e um teste com Kafka real). Resultados e provas (aceite H5, carga local, caos): `docs/resultados-carga.md`, `docs/resultados-caos.md` e `infra/h5-acceptance.sh` no repositório `fraud-detection-engine`.
